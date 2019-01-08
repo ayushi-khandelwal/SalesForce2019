@@ -35,7 +35,8 @@ private class TestOpportunityStageChange {
 		opp.StageName = 'Closed Won';
 		
 		update opp;
-		
-		System.assertEquals(Date.today(),opp.CloseDate);
+		Opportunity opp2 = [Select CloseDate From Opportunity where Id=:opp.Id];
+		System.debug(opp2.CloseDate);
+		System.assertEquals(Date.today(),opp2.CloseDate);
     }
 }
