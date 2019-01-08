@@ -1,6 +1,6 @@
 public with sharing class Opportunities extends fflib_SObjectDomain {
    
-   ContactSelectorInterface contactSelectorObject = new ContactsSelector();
+   ContactsSelector contactSelectorObject = new ContactsSelector();
    
    public Opportunities(List<Opportunity> sObjectList) {
         super(sObjectList);
