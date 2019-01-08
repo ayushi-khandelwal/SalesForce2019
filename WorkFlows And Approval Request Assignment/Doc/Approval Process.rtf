@@ -1,0 +1,170 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset0 Times New Roman;}{\f2\fnil\fcharset0 Consolas;}{\f3\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 6.3.9600}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\qc\b\f0\fs48\lang9 Approval Processing with Apex Code\par
+
+\pard\sa200\sl276\slmult1\qj\b0\f1\fs22 Approval Process could be created with Apex Code and REST APIs. To ensure that many system related functionalities work effectively with developer usable ease, there are classes created for handling Approval Processes. \par
+These classes are as follows\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\qj ProcessRequest Class.\par
+{\pntext\f3\'B7\tab}ProcessResult Class.\par
+{\pntext\f3\'B7\tab}ProcessSubmitRequest Class.\par
+{\pntext\f3\'B7\tab}ProcessWorkitemRequest Class.\par
+
+\pard\sa200\sl276\slmult1\qj\par
+\ul\b\fs24 Process Request Class\par
+\ulnone\b0\fs22 It is the Parent Class Of ProcessSubmitRequest and ProcessWorkItemRequest Class.  Used to get and set Comments() for the Request and nextApproverIds().\par
+Note -> Request must be Instantiated via the child classes.\par
+\par
+\ul\b\fs24 ProcessSubmitRequest Class\par
+\ulnone\b0\fs22 Use to submit a record for approval.\par
+Approval.ProcessSubmitRequest psr = new Approval.ProcessSubmitRequest();\par
+\tab getObjectId() -> Returns Object Id of the Record submitted for Approval.\par
+\b\fs32\tab\b0\fs22 setObjectId(recordId) -> Sets Object Id of the Record for Approval.\par
+\tab getSubmitterId()\par
+\tab setSubmitterId(submitterId)\par
+Apart from this there are two more getter setters which are used to get Process Name and Skip Entry Criteria of an Approval Process.\par
+\tab setProcessDefinitionNameOrId(nameOrId) -> sets the developer name or Id of the \tab\tab\tab\tab\tab process to be evaluated.\par
+\tab getProcessDefinitionNameOrId()\par
+\tab setSkipEntryCriteria(skipEntryCriteria) ->  If the process definition name or ID is not \tab\tab\tab\tab\tab null, setSkipEntryCriteria() determines whether to \tab\tab\tab\tab\tab evaluate the entry criteria for the process (true) or \tab\tab\tab\tab\tab not (false).\par
+\tab getSkipEntryCriteria()\par
+\par
+\ul\b\fs24 ProcessWorkitemRequest Class\par
+\ulnone\b0\fs22 Used to  process approval request after it is submitted.\par
+Approval.ProcessWorkitemRequest pwr = new Approval.ProcessWorkitemRequest();\par
+\tab getAction() -> Returns the type of Action already associated with the Approval \tab\tab\tab\tab\tab\tab Request.  Valid values are: Approve, Reject, or \tab\tab\tab\tab\tab\tab Removed.\par
+\tab setAction(actionType)\par
+\tab getWorkitemId() -> Returns the ID of the approval request that is in the process of \tab\tab\tab\tab\tab being Approved, Rejected, or Removed.\par
+\tab setWorkitemId(id) \par
+\par
+\ul\b\fs24 ProcessResult Class\par
+\ulnone\b0\fs22 Use to process the result of an Approval Process.\par
+Approval.ProcessResult result = Approval.process(req1);\par
+\tab getEntityId()  -> Id Of Record being processed.\par
+\tab getErrors()\par
+\tab getInstanceId() -> The ID of the Approval Process that has been submitted for \tab\tab\tab\tab\tab\tab Approval.\par
+\tab getInstanceStatus() -> Approved,Rejected,Removed or Pending.\par
+\tab getNewWorkitemIds() -> IDs of the new items submitted to the approval process. \tab\tab\tab\tab\tab Returns a List of size 2.\par
+\tab isSuccess() -> Boolean value of true if the process completed successfully.\par
+\par
+Apart from these 4 class to handle Approval Request status , Approval Class has methods to process approval requests.\par
+\ul\b\fs24 Approval Class\par
+\ulnone\b0\fs22\tab isLocked(ids/sobjects) -> to check Locked status of Record ID/sObjects.\par
+\tab lock(recordIds/recordsToLock) -> Locks the records. To remove rollBack use \tab\tab\tab\tab\tab\tab allOrNothing as a second parameter.\par
+\tab process(approvalRequests) -> Submits approval Requests, and approves or rejects \tab\tab\tab\tab\tab existing approval request. To remove rollBack use \tab\tab\tab\tab\tab allOrNone as a second parameter.\par
+\tab unlock(recordIds/recordsToLock) -> Unlocks the Records. To remove rollBack use \tab\tab\tab\tab\tab allOrNothing as a second parameter.\par
+\f0\par
+\par
+
+\pard\sa200\sl276\slmult1\f2\lang1033 // Insert an account\par
+Account a = new Account(Name='Test',\par
+                     annualRevenue=100.0);\par
+insert a;\par
+\par
+// Create an approval request for the account\par
+Approval.ProcessSubmitRequest req1 = \par
+      new Approval.ProcessSubmitRequest();\par
+req1.setObjectId(a.id);\par
+\par
+// Submit the approval request for the account\par
+Approval.ProcessResult result = \par
+                   Approval.process(req1);\par
+
+\pard\sa200\sl276\slmult1\qj\par
+\f0\lang9\par
+\par
+Following is the sample code for Opportunity Object Approval And Rejection Process using Triggers -->\par
+\par
+\f2 trigger AutomateApprove on Opportunity(After insert, After update)\par
+\{\par
+    for (Integer i = 0; i < Trigger.new.size(); i++)\par
+    \{\par
+     try\par
+     \{\par
+        if( Trigger.isInsert || (Trigger.new[i].Next_Step__c == 'Submit' && Trigger.old[i].Next_Step__c != 'Submit'))\par
+        \{\par
+           submitForApproval(Trigger.new[i]);\par
+        \}\par
+.................\par
+Note -> See Linked NotePad File with this Doc.\par
+\par
+\f1 The trigger will call the methods.\par
+\par
+\ul\fs32 To use the same methods using REST APIs JSON Request and JSON Response is needed -> \fs22\par
+\ulnone\b\fs24 Get a List Of All Approval Processes \par
+\tab\fs22 usage ->\par
+
+\pard\sa200\sl276\slmult1\b0\tab curl {{\field{\*\fldinst{HYPERLINK https://yourInstance.salesforce.com/services/data/v30.0/process/approvals/ }}{\fldrslt{https://yourInstance.salesforce.com/services/data/v30.0/process/approvals/\ul0\cf0}}}}\f1\fs22  -H "Authorization: Bearer token"\par
+\par
+\tab\b JSON Response Body ->\par
+\b0\tab\{\par
+  \tab\tab "approvals" : \{\par
+ \tab\tab\tab   "Account" : [ \{\par
+   \tab\tab\tab\tab   "description" : null,\par
+    \tab\tab\tab\tab  "id" : "04aD00000008Py9",\par
+    \tab\tab\tab\tab  "name" : "Account Approval Process",\par
+   \tab\tab\tab\tab   "object" : "Account",\par
+  \tab\tab\tab\tab    "sortOrder" : 1\par
+ \tab\tab\tab\tab   \} ]\par
+ \tab\tab\tab  \}\par
+\tab\}\par
+\par
+\b\fs24 Submit A Record For Approval\par
+\b0\fs22\tab\b usage->\par
+\b0\tab curl {{\field{\*\fldinst{HYPERLINK https://yourInstance.salesforce.com/services/data/v30.0/process/approvals/ }}{\fldrslt{https://yourInstance.salesforce.com/services/data/v30.0/process/approvals/\ul0\cf0}}}}\f1\fs22  -H "Authorization: Bearer token" -H "Content-Type: application/json" -d @submit.json"\par
+\tab\par
+\tab\b JSON Request Body ->\par
+\b0\tab\{\par
+\tab\tab "requests" : [\{\par
+\tab\tab "actionType": "Submit",\par
+\tab\tab "contextId": "001D000000I8mIm",\par
+\tab\tab "nextApproverIds": ["005D00000015rY9"],\par
+\tab\tab "comments":"this is a test",\par
+\tab\tab "contextActorId": "005D00000015rZy",\par
+\tab\tab "processDefinitionNameOrId" : "PTO_Request_Process",\par
+\tab\tab "skipEntryCriteria": "true"\}]\par
+\tab\}\par
+\par
+\tab\b JSON Response Body ->\par
+\b0\tab [ \{ \par
+\tab\tab   "actorIds" : [ "005D00000015rY9IAI" ],\par
+\tab\tab    "entityId" : "001D000000I8mImIAJ",\par
+\tab\tab    "errors" : null,\par
+\tab\tab    "instanceId" : "04gD0000000Cvm5IAC",\par
+\tab\tab    "instanceStatus" : "Pending",\par
+\tab\tab    "newWorkitemIds" : [ "04iD0000000Cw6SIAS" ],\par
+\tab\tab    "success" : true \} ]\par
+ \par
+
+\pard\sa200\sl276\slmult1\qj\b\f2\fs24 Approve/Reject a Record\par
+\b0\fs22\tab\b usage->\b0\par
+\tab curl {{\field{\*\fldinst{HYPERLINK https://yourInstance.salesforce.com/services/data/v30.0/process/approvals/ }}{\fldrslt{https://yourInstance.salesforce.com/services/data/v30.0/process/approvals/\ul0\cf0}}}}\f2\fs22  -H "Authorization: Bearer token" -H "Content-Type: application/json" -d @approve.json"\par
+\par
+\tab\b JSON Request Body->\par
+\b0\tab\{\par
+\tab\tab "requests" : [\{\par
+    \tab\tab "actionType" : "Approve",\par
+\tab       "contextId" : "04iD0000000Cw6SIAS",\par
+    \tab\tab "nextApproverIds" : ["005D00000015rY9"],\par
+    \tab\tab "comments" : "this record is approved"\}]\par
+\tab\}\tab\par
+\par
+\tab\b JSON Response Body ->\par
+\b0\tab [ \{ \par
+ \tab\tab  "actorIds" : null,\par
+  \tab\tab  "entityId" : "001D000000I8mImIAJ",\par
+  \tab\tab  "errors" : null,\par
+  \tab\tab  "instanceId" : "04gD0000000CvmAIAS",\par
+  \tab\tab  "instanceStatus" : "Approved",\par
+  \tab\tab  "newWorkitemIds" : [ ],\par
+  \tab\tab  "success" : true \par
+\tab\} ] \par
+
+\pard\sa200\sl276\slmult1\b\fs32\par
+\ul References \par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 {\ulnone\b0\fs24{\field{\*\fldinst{HYPERLINK https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/using_resources_working_with_processes.htm?search_text=approval }}{\fldrslt{https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/using_resources_working_with_processes.htm?search_text=approval\ul0\cf0}}}}\ulnone\b0\f2\fs24\par
+{\pntext\f3\'B7\tab}{{\field{\*\fldinst{HYPERLINK https://www.jitendrazaa.com/blog/salesforce/dynamic-approval-process-based-on-the-apex-and-trigger/ }}{\fldrslt{https://www.jitendrazaa.com/blog/salesforce/dynamic-approval-process-based-on-the-apex-and-trigger/\ul0\cf0}}}}\b\f2\fs32\par
+{\pntext\f3\'B7\tab}{\b0\fs24{\field{\*\fldinst{HYPERLINK https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_process.htm }}{\fldrslt{https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_process.htm\ul0\cf0}}}}\f2\fs32\par
+}
+ 
