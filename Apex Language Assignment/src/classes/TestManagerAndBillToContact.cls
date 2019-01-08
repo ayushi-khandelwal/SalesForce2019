@@ -23,16 +23,30 @@
 private class TestManagerAndBillToContact {
 
     static testMethod void myUnitTest() {
-     Id opportunityId = Id.valueOf('00610000018694FAAQ');
-       Id accountId = Id.valueOf('0011000001LQZQ2AAP');
-       Opportunity opp = [Select Id,Name,Amount,BillToContact__r.Name,Manager__r.Name From Opportunity Where Id =: opportunityId];
-	   Contact conct = [Select Id,Name From Contact Limit 1];
-       opp.Amount = 1000;
-	   opp.BillToContact__r.Id = conct.Id;
-       update opp; 
+     Opportunity opp = new Opportunity();
+		Date date1 = Date.newInstance(2016, 02, 5);
+		opp.Name = 'Test Opp';
+		opp.CloseDate = date1;
+		opp.StageName = 'Prospecting';
+    	insert opp;
+    	
+    	Account acct = new Account();
+    	acct.Name = 'Test Account';
+    	insert acct;
+    	
+     	Contact cont = new Contact();
+     	cont.LastName = 'Test Contact';
+     	cont.AccountId = acct.id;
+     	insert cont;
+     	
+       Opportunity opp2 = [Select Id,Name,Amount,BillToContact__c,Manager__c From Opportunity Where Id =: opp.Id];
+       opp2.Amount = 1000;
+	   opp2.BillToContact__c = cont.Id;
+       update opp2; 
+       
        Set<Id> opportunitySet = new Set<Id>();
-       opportunitySet.add(opportunityId);
+       opportunitySet.add(opp2.Id);
        List<Opportunity> opp1 = new OpportunitiesSelector().selectOpportunityById(opportunitySet);
-       System.assertEquals(accountId,opp1[0].Manager__r.Id);
+       System.assertEquals(acct.Id,opp1[0].Manager__c);
     }
 }
