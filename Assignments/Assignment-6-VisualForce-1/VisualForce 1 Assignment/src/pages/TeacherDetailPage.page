@@ -1,0 +1,15 @@
+<apex:page standardController="Contact" extensions="TeacherDetailExtension">
+     <style type="text/css">
+        #recordTypeBar { 
+         	text-align:center;
+         	font-weight: bold;
+         	border:2px solid black;
+         	background-color: skyBlue;
+         	width: 100%;
+         }
+    </style>
+	<div id="recordTypeBar">
+       {!contact.RecordType.Name} 
+    </div>
+    <apex:detail />
+</apex:page>

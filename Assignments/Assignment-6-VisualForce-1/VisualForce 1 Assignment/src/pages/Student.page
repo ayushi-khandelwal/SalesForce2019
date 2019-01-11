@@ -1,0 +1,17 @@
+<apex:page standardController="Student__c" >
+<apex:pageBlock title="Student Detail Form">
+<apex:form >
+	<apex:pageBlockSection title="Details">
+	<apex:inputField value="{!Student__c.Name}"/>
+	<apex:inputField value="{!Student__c.email__c}"/>
+	<apex:inputField value="{!Student__c.First_Name__c}"/>
+	<apex:inputField value="{!Student__c.Last_Name__c}"/>
+	<apex:inputField value="{!Student__c.Sex__c}"/>
+	<apex:inputField value="{!Student__c.DOB__c}"/>
+	<apex:inputField value="{!Student__c.Married__c}"/>
+	<apex:inputField value="{!Student__c.Wife_Name__c}"/>
+	<apex:commandButton value="Submit" action="{!save}" />
+	</apex:pageBlockSection>
+</apex:form>
+</apex:pageBlock>
+</apex:page>

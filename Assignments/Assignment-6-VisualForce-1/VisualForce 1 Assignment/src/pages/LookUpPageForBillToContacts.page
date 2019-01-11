@@ -1,0 +1,19 @@
+<apex:page standardController="Opportunity" extensions="ContactListExtension">
+		<apex:form >
+    	<apex:pageBlock title="Contact List">
+            <apex:pageBlock title="Search By">
+                Contact Name
+                <apex:inputText value="{!name}" />
+                <apex:commandButton value="Search" action="{!searchContacts}" />
+            </apex:pageBlock>
+            <apex:pageBlock >
+                <apex:selectRadio value="{!ContactId}" layout="pageDirection">
+            		<apex:selectOptions value="{!items}"/>
+            	</apex:selectRadio>
+            </apex:pageBlock>
+			<apex:commandButton value="Save" action="{!saveBillToContact}" />
+			<apex:commandButton value="Clear" action="{!clearBillToContact}" />
+			<apex:commandButton value="Cancel" action="{!cancelBillToContact}" />
+		</apex:pageBlock>
+        </apex:form>
+</apex:page>

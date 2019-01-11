@@ -1,0 +1,39 @@
+<apex:page standardController="Class__c" extensions="ManageClassExtension,EditClassExtension" >
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection >
+                Classes List
+            </apex:pageBlockSection>
+            <apex:pageBlockTable value="{!classList}" var="classObject1">
+                <apex:column >
+                    <apex:commandLink value="Edit" action="{!editTheClass}">
+                    	<apex:param name="nickName"
+               				 value="{!classObject1.Id}"
+               						 assignTo="{!classId}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column >
+                    <apex:commandLink value="Delete" action="{!deleteTheClass}">
+                    	<apex:param name="nickName2"
+               				 value="{!classObject1.Id}"
+               						 assignTo="{!classId}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column value="{!classObject1.Name}" />
+            </apex:pageBlockTable>
+            <apex:commandButton value="Previous" action="{!setCon.previous}" disabled="{!!setCon.hasPrevious}"/>
+            <apex:commandButton value="Next" action="{!setCon.next}" disabled="{!!setCon.hasNext}"/>
+        </apex:pageBlock>
+        <apex:pageBlock rendered="{!showEditPage}">
+            <apex:pageBlockSection title="Details">
+            <apex:inputField value="{!classObject.Name__c}" />
+            <apex:inputField value="{!classObject.Name}"/>
+            <apex:inputField value="{!classObject.Max_Size__c}"/>
+            <apex:inputField value="{!classObject.Class_Teacher__c}"/>
+            <apex:inputField value="{!classObject.Detailed_Description__c}"/>
+            <apex:inputField value="{!classObject.Fee__c}"/>
+            <apex:commandButton value="Save" action="{!saveTheClassObject}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,39 @@
+<apex:page standardController="Student__c">
+	<apex:pageBlock title="Student Details">
+		<div>
+            <p>
+            	Name&nbsp;&nbsp;&nbsp;{!Student__c.Name}
+            </p>
+        </div>
+		<div> 
+            <p>
+        		Age&nbsp;&nbsp;&nbsp;{!Student__c.Age__c}        
+            </p>
+        </div>
+		<div> 
+            <P>
+                Date Of Birth&nbsp;&nbsp;&nbsp;{!Student__c.DOB__c}
+            </P>
+        </div>
+		<div>
+            <P>
+                Email&nbsp;&nbsp;&nbsp;{!Student__c.email__c}
+            </P>
+        </div>
+		<div>
+            <p>
+                Sex &nbsp;&nbsp;&nbsp;<apex:outputField value="{!Student__c.Sex__c}"/>
+            </p>
+        </div>
+		<div>
+            <p>
+                Married&nbsp;&nbsp;&nbsp;<apex:outputField value="{!Student__c.Married__c}"/>
+            </p> 
+        </div>
+		<div>
+            <p>
+                Wife Name&nbsp;&nbsp;&nbsp;{!Student__c.Wife_Name__c}
+            </p>
+        </div>
+	</apex:pageBlock>
+</apex:page>

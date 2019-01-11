@@ -1,0 +1,7 @@
+<apex:page Controller="JSONExtension" action="{!setJson}" >
+    <apex:form>
+        <apex:inputTextarea value="{!recordId}"/>
+        <apex:commandButton action="{!setJson}" value="Generate Json" />
+    </apex:form>
+    <apex:outputText>{!jsonObject}</apex:outputText>
+</apex:page>

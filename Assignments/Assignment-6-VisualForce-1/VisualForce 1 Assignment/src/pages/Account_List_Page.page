@@ -1,0 +1,25 @@
+<apex:page standardController="Account" recordSetvar="accountList" extensions="AccountListFilterController">
+   <apex:form id="theForm">
+	<apex:pageBlock title="Account List Filters">
+			Billing Country
+			<apex:inputText value="{!billingCountry}" />
+			Billing State
+			<apex:inputText value="{!billingState}" />
+			Billing City
+			<apex:inputText value="{!billingCity}" />
+			<apex:commandButton value="Search" action="{!searchAccount}" />
+	</apex:pageBlock>
+	<apex:pageBlock title="Account List" >
+            <apex:pageBlockTable rendered="{!showResult}" value="{!accountList}" var="account" id="pbId">
+                <apex:column value="{!account.Name}"/>
+                <apex:column value="{!account.AnnualRevenue}"/>
+                <apex:column value="{!account.AccountNumber}"/>
+                <apex:column value="{!account.BillingCountry}"/>
+            </apex:pageBlockTable>
+        	<apex:commandButton value="First" action="{!firstPage}" disabled="{!!setCon.hasPrevious}"/>
+        	<apex:commandButton value="Previous" action="{!previousPage}" disabled="{!!setCon.hasPrevious}"/>
+        	<apex:commandButton value="Next" action="{!nextPage}" disabled="{!!setCon.hasNext}"/>
+        	<apex:commandButton value="Last" action="{!lastPage}" disabled="{!!setCon.hasNext}"/>
+	</apex:pageBlock>
+  </apex:form>
+</apex:page>

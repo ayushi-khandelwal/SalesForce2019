@@ -1,0 +1,15 @@
+<apex:page standardController="Opportunity" extensions="OpportunityFormExtension">
+	<apex:pageBlock title="Student Detail Form">
+		<apex:form >
+			<apex:pageBlockSection title="Details">
+			<apex:inputField value="{!Opportunity.Name}" />
+			<apex:inputField value="{!Opportunity.CloseDate}"/>
+			<apex:inputField value="{!Opportunity.StageName}"/>
+		   	<div><apex:inputField value="{!Opportunity.BillToContact__c}"></apex:inputField><apex:commandButton action="{!searchContact}" value="Find"/></div>
+			<apex:inputField value="{!Opportunity.Manager__c}"/>
+		   	<apex:inputField value="{!Opportunity.Description}"/>
+		    <apex:commandButton value="Submit" action="{!save}" />
+		    </apex:pageBlockSection>
+		  </apex:form>
+	</apex:pageBlock>
+</apex:page>
