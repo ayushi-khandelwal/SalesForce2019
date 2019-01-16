@@ -1,0 +1,126 @@
+<apex:page controller="CartController">
+     <script>
+      window.addEventListener('load', function() {
+              var x = document.getElementById('productsShowDiv');
+              x.style.display='none'; 
+  	}); 
+      function showPageBlock(elId){
+         var x = document.getElementById(elId);
+          x.style.display = 'block';
+      }
+  </script>
+    <div>Welcome To Your Cart!</div>
+    <apex:form id="theForm">
+        <apex:pageBlock id="purchaseOrders">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!createAPurchaseOrder}" value="New Purchase Order"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!purchaseOrderList}" var="purchaseOrder" rowClasses="odd,even" styleClass="tableClass">
+                    <apex:facet name="header">Purchase Orders</apex:facet>
+                    <apex:column >
+                        <apex:facet name="header">Name</apex:facet>
+                        <apex:commandLink action="{!viewPurchaseItemsOf}" value="View Items" reRender="detailListBlock">
+                                    <apex:param name="parameterId"
+                                        value="{!purchaseOrder.Id}"
+                                     assignTo="{!purchaseOrderId}"></apex:param>
+                        </apex:commandLink>
+                        <h2>{!purchaseOrder.Name}</h2>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Order Cost</apex:facet>
+                        {!purchaseOrder.Order_Cost__c}
+                    </apex:column>   
+                    <apex:column >
+                        <apex:facet name="header">Status</apex:facet>
+                        {!purchaseOrder.Status__c}
+                    </apex:column>                          
+                    <apex:column >
+                        <apex:facet name="header">Purchase Order Id</apex:facet>
+                        {!purchaseOrder.Purchase_Order_Id__c}
+                    </apex:column>
+                    <apex:column >
+                        <apex:commandButton action="{!addPurchaseItems}" oncomplete="showPageBlock('productsShowDiv');" value="Add Items In Purchase Order" reRender="detailListBlock,addProducts">
+                            <apex:param name="parameterId"
+                                        value="{!purchaseOrder.Id}"
+                                     assignTo="{!purchaseOrderId}">
+                            </apex:param>
+                        </apex:commandButton>  
+                    </apex:column>  
+            </apex:pageBlockTable>  
+        </apex:pageBlock>
+        <div id="productsShowDiv">
+            <apex:pageBlock id="addProducts">
+              Search Products For {!purchaseOrderObject.Name}
+              Name Of Product
+			  <apex:inputText value="{!productQuery}" />
+              <apex:commandButton value="Search" action="{!searchProduct}" reRender="addProducts" />
+              <apex:pageBlockTable value="{!productList}" var="product" rowClasses="odd,even" styleClass="tableClass">
+                    <apex:facet name="header">Products</apex:facet>
+                    <apex:column >
+                    		<apex:facet name="header">Name</apex:facet>
+                    		{!product.Name}
+                	</apex:column>
+                  	<apex:column >
+                    		<apex:facet name="header">Availibility</apex:facet>
+                    		{!product.Status__c}
+                	</apex:column>
+                  	<apex:column >
+                    		<apex:facet name="header">Price</apex:facet>
+                    		{!product.Price__c}
+                	</apex:column>
+                  	<apex:column >
+                    		<apex:facet name="header">Action</apex:facet>
+                        	<apex:commandLink action="{!addToCart}" value="Add To Order" reRender="purchaseOrders,detailListBlock">
+                                    <apex:param name="parameterOfProductId"
+                                        value="{!product.Id}"
+                                        assignTo="{!productId}" />
+                    		</apex:commandLink>
+                    </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        </div>
+        <apex:pageBlock id="detailListBlock" mode="inLineMode">
+            <apex:pageBlockTable id="table" value="{!listOfPurchaseLineItems}" var="purchaseLineItems" rowClasses="odd,even" styleClass="tableClass">
+                <apex:facet name="header">Purchase Order Items of {!purchaseOrderObject.Name}</apex:facet>
+                <apex:column >
+                    <apex:facet name="header">Name</apex:facet>
+                    {!purchaseLineItems.Name}
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Quantity</apex:facet>
+                    <apex:actionRegion >
+                    <apex:outputField value="{!purchaseLineItems.Quantity__c}" >
+                        <apex:inlineEditSupport id="inlineEdit" event="ondblClick" showOnEdit="saveButton"/>
+                    </apex:outputField>
+                    </apex:actionRegion>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Price Of Line Item</apex:facet>
+                    {!purchaseLineItems.Total_Price__c}
+                </apex:column>
+                <apex:column >
+                    <apex:commandButton action="{!deletePurchaseItem}" value="Delete" reRender="purchaseOrders,detailListBlock">
+                                    <apex:param name="parameterOfPurchaseLineItemId"
+                                        value="{!purchaseLineItems.Id}"
+                                        assignTo="{!purchaseLineItemsId}" />
+                    </apex:commandButton>
+                 </apex:column>
+            </apex:pageBlockTable>
+            <apex:commandButton id="saveButton" action="{!saveList}"  value="Save" reRender="purchaseOrders,detailListBlock" />
+        </apex:pageBlock>
+        
+        
+        <!--apex:pageBlock id="addLineItem" rendered="{!showAddPage}" >
+            <div>
+               Add Item for {!purchaseOrderObject.Name}
+            </div>
+            <div>
+               Quantity &nbsp; <apex:inputField value="{!purchaseLineItemObject.Quantity__c}" label="Quantity"></apex:inputField>
+            </div>
+            <div>
+               Product &nbsp; <apex:inputField value="{!purchaseLineItemObject.Product__c}" label="Product"></apex:inputField>
+            </div>
+            <apex:commandButton action="{!savePurchaseItems}"  value="Save Line Item" />
+        </apex:pageBlock-->
+    </apex:form>
+</apex:page>
