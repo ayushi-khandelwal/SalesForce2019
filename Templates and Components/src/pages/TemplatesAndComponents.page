@@ -1,0 +1,5 @@
+<apex:page >
+    <apex:form >
+        <c:DataList objectNameOfComponent="Account" fieldParamComponent="Id,Name,AccountNumber,AnnualRevenue"/>
+    </apex:form>  
+</apex:page>
