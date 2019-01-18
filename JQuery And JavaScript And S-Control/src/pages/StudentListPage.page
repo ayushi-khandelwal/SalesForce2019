@@ -1,0 +1,35 @@
+<apex:page standardController="Student__c"
+	extensions="StudentListController">
+	<script>
+        function openEditWindow(studentId){
+            	console.log(typeof studentId);
+            	window.open("/apex/Student_Entry_PopUp?id="+studentId, "Edit Student", "height=500,width=500");
+            	return false;
+            }
+    </script>
+	<apex:form>
+		<apex:pageBlock id="dataTable" title="Student List">
+			<apex:pageBlockTable value="{!records}" var="student" id="pbId">
+				<apex:column value="{!student.Name}" />
+				<apex:column value="{!student.Id}" />
+				<apex:column value="{!student.email__c}" />
+				<apex:column value="{!student.Married__c}" />
+				<apex:column>
+					<apex:commandButton value="Edit"
+						onClick="openEditWindow('{!student.Id}')" reRender="x">
+						<apex:param value="{!student.Id}" assignTo="{!studentId}"></apex:param>
+					</apex:commandButton>
+					<!--input type="button" value="Edit" onClick="openEditWindow('{!student.Id}');" /-->
+				</apex:column>
+			</apex:pageBlockTable>
+			<apex:commandButton value="First" action="{!setCon.first}"
+				disabled="{!!setCon.hasPrevious}" reRender="dataTable" />
+			<apex:commandButton value="Previous" action="{!setCon.previous}"
+				disabled="{!!setCon.hasPrevious}" reRender="dataTable" />
+			<apex:commandButton value="Next" action="{!setCon.next}"
+				disabled="{!!setCon.hasNext}" reRender="dataTable" />
+			<apex:commandButton value="Last" action="{!setCon.last}"
+				disabled="{!!setCon.hasNext}" reRender="dataTable" />
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

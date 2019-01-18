@@ -1,0 +1,39 @@
+<apex:page standardController="Student__c"
+	extensions="StudentPopUpEditController" showHeader="false"
+	sidebar="false">
+	<apex:pageMessages />
+	<apex:pageBlock title="Add New Student To Class" rendered="{!showForm}">
+		<apex:form>
+			<table>
+				<tr>
+					<td><apex:outputLabel id="Name">Name</apex:outputLabel></td>
+					<td><apex:inputField label="Name"
+							value="{!studentToBeAdded.Name}" required="true" /></td>
+				</tr>
+				<tr>
+					<td><apex:outputLabel id="Email">Email</apex:outputLabel></td>
+					<td><apex:inputField label="Email"
+							value="{!studentToBeAdded.email__c}" /></td>
+				</tr>
+				<tr>
+					<td><apex:outputLabel id="FirstName">First Name</apex:outputLabel></td>
+					<td><apex:inputField label="FirstName"
+							value="{!studentToBeAdded.First_Name__c}" /></td>
+				</tr>
+				<tr>
+					<td><apex:outputLabel id="LastName">Last Name</apex:outputLabel></td>
+					<td><apex:inputField label="LastName"
+							value="{!studentToBeAdded.Last_Name__c}" required="true" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><apex:commandButton value="Submit" action="{!saveStudent}" />
+					</td>
+				</tr>
+			</table>
+		</apex:form>
+	</apex:pageBlock>
+	<apex:pageBlock rendered="{!!showForm}">
+        Student Added Successfully.
+    </apex:pageBlock>
+</apex:page>

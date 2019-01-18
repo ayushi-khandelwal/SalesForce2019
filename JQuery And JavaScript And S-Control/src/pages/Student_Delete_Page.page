@@ -1,0 +1,26 @@
+<apex:page standardController="Student__c"
+	extensions="StudentDeleteController" recordSetVar="Student">
+	<apex:messages />
+	<apex:form>
+		<apex:pageBlock id="dataTable" title="Student List">
+			<apex:pageBlockTable value="{!records}" var="stud" id="pbId">
+				<apex:column value="{!stud.Name}" />
+				<apex:column value="{!stud.Id}" />
+				<apex:column value="{!stud.email__c}" />
+				<apex:column value="{!stud.Married__c}" />
+			</apex:pageBlockTable>
+			<apex:commandButton value="First" action="{!setCon.first}"
+				disabled="{!!setCon.hasPrevious}" reRender="dataTable" />
+			<apex:commandButton value="Previous" action="{!setCon.previous}"
+				disabled="{!!setCon.hasPrevious}" reRender="dataTable" />
+			<apex:commandButton value="Next" action="{!setCon.next}"
+				disabled="{!!setCon.hasNext}" reRender="dataTable" />
+			<apex:commandButton value="Last" action="{!setCon.last}"
+				disabled="{!!setCon.hasNext}" reRender="dataTable" />
+		</apex:pageBlock>
+		<apex:pageBlock>
+			<apex:commandButton value="Continue" action="{!deleteStudents}"></apex:commandButton>
+			<apex:commandButton value="Cancel" action="{!closeWindow}"></apex:commandButton>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

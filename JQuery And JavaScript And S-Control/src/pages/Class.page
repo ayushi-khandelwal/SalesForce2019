@@ -1,0 +1,15 @@
+<apex:page standardController="Class__c" >
+<apex:pageBlock title="Student Detail Form">
+<apex:form >
+	<apex:pageBlockSection title="Details">
+	<apex:inputField value="{!Class__c.Name__c}" />
+	<apex:inputField value="{!Class__c.Name}"/>
+	<apex:inputField value="{!Class__c.Max_Size__c}"/>
+   	<apex:inputField value="{!Class__c.Class_Teacher__c}"/>
+	<apex:inputField value="{!Class__c.Detailed_Description__c}"/>
+   	<apex:inputField value="{!Class__c.Fee__c}"/>
+    <apex:commandButton value="Submit" action="{!save}" />
+    </apex:pageBlockSection>
+  </apex:form>
+</apex:pageBlock>
+</apex:page>

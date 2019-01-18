@@ -1,0 +1,18 @@
+<apex:page standardController="Student__c" showHeader="false"
+	sidebar="false">
+	<style>
+.detailTable {
+	border: 1px solid black;
+}
+</style>
+	<table class="detailTable">
+		<tr class="detailTable">
+			<th class="detailTable">Student Name</th>
+			<th class="detailTable">Class Name</th>
+		</tr>
+		<tr class="detailTable">
+			<td class="detailTable">{!Student__c.Name}</td>
+			<td class="detailTable">{!Student__c.Class__r.Name__c}</td>
+		</tr>
+	</table>
+</apex:page>
