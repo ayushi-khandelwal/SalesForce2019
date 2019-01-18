@@ -13,8 +13,9 @@ public with sharing class DataListController {
     Map<String, Schema.SObjectField> fieldMap;
     Transient Schema.DescribeSObjectResult objectDescribe;
     
+    public Boolean showDataTable{get;set;}
+    
     public DataListController(){
-        
     }
     
     public List<sObject> getRecords(){
@@ -44,14 +45,17 @@ public with sharing class DataListController {
 					}
                     if(ssc!=null && pageSize!=null && pageSize>0){
                         ssc.setPageSize(pageSize);
+                        showDataTable = true;
                     }
                     return ssc.getRecords();
                 }
             else{
+                	showDataTable =false;
             		return null;
        		 }
         }
         else{
+            showDataTable = true;
             return ssc.getRecords();
         }
     }
@@ -69,5 +73,9 @@ public with sharing class DataListController {
     
     public void sortByField(){
        ssc = null; 
+    }
+    
+    public PageReference goBack(){
+        return new PageReference('javascript:window.close()');
     }
 }
