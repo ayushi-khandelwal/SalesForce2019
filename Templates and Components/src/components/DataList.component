@@ -4,17 +4,12 @@
     <apex:attribute name="pageSizeComponent" type="Integer" assignTo="{!pageSize}" description="PageSize of the Data List that is going to be rendered." default="5" />
    <apex:slds />
    <apex:pageMessages />
-   <apex:pageBlock id="dataTable">
-       <apex:pageblockTable value="{!records}" var="rec" rendered="{!OR(NOT(ISNULL(records)))}" >
+   <apex:pageBlock id="dataTable" rendered="{!showDataTable}">
+       <apex:pageblockTable value="{!records}" var="rec">
            <apex:repeat value="{!fieldNames}" var="fld">
                <apex:column >
                    <apex:facet name="header">
                        <apex:outputPanel layout="block">
-                          <!-- <apex:outputText value="{!nameLabelMap[fld]}" />
-                           <apex:commandButton value="Sort Ascending" action="{!sortByField}" reRender="dataTable">
-                               <apex:param name="sortByFieldAssignment" value="{!fld}" assignTo="{!sortByField}">
-                               </apex:param>
-                           </apex:commandButton> -->
                            <apex:commandLink value="{!nameLabelMap[fld]}" action="{!sortByField}" reRender="dataTable">
                            	   <apex:param name="sortByFieldAssignment" value="{!fld}" assignTo="{!sortByField}">
                                </apex:param>
@@ -24,17 +19,20 @@
                    <apex:outputField value="{!rec[fld]}" />
                </apex:column>
            </apex:repeat>
-           <apex:column>
+           <apex:column >
                <apex:outputLink value="/{!rec.Id}"> View Record</apex:outputLink>
            </apex:column>
            </apex:pageblockTable>
+           <apex:commandButton value="First" action="{!ssc.first}" disabled="{!!ssc.hasPrevious}" reRender="dataTable"  />
+      	   <apex:commandButton value="Previous" action="{!ssc.previous}" disabled="{!!ssc.hasPrevious}" reRender="dataTable" />
+       	   <apex:commandButton value="Next" action="{!ssc.next}" disabled="{!!ssc.hasNext}" reRender="dataTable" />
+       	   <apex:commandButton value="Last" action="{!ssc.last}" disabled="{!!ssc.hasNext}" reRender="dataTable" />
+    </apex:pageBlock>
+    <apex:pageBlock>
         <!-- Show notice if related list has no records -->
-       <apex:outputPanel layout="block" styleClass="noRecordsFound" rendered="{!records.size == 0}">
+       <apex:outputPanel layout="block" rendered="{!!showDataTable}" >
            No records to display
        </apex:outputPanel>
-           <apex:commandButton value="First" action="{!ssc.first}" disabled="{!!ssc.hasPrevious}" reRender="dataTable"  />
-      		 <apex:commandButton value="Previous" action="{!ssc.previous}" disabled="{!!ssc.hasPrevious}" reRender="dataTable" />
-       		<apex:commandButton value="Next" action="{!ssc.next}" disabled="{!!ssc.hasNext}" reRender="dataTable" />
-       		<apex:commandButton value="Last" action="{!ssc.last}" disabled="{!!ssc.hasNext}" reRender="dataTable" />
+        <apex:commandButton value="Back" action="{!goBack}" disabled="{!showDataTable}"  />
     </apex:pageBlock>
 </apex:component>
