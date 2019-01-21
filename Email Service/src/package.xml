@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>StudentsHelper</members>
+        <members>Students</members>
+        <members>StudentsSelector</members>
+        <members>IClassService</members>
+        <members>ClassesHelper</members>
+        <members>ClassesSelector</members>
+        <members>ClassService</members>
+        <members>ClassServiceImpl</members>
+        <members>Classes</members>
+        <members>Contacts</members>
+        <members>ContactServiceImpl</members>
+        <members>ContactService</members>
+        <members>ContactsHelper</members>
+        <members>ContactsSelector</members>
+        <members>IContactService</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Student</members>
+        <members>Class</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>Scontrol</name>
+    </types>
+    <types>
+        <members>StudentTrigger</members>
+        <members>ClassTrigger</members>
+        <members>ContactTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
+    <version>38.0</version>
+</Package>
