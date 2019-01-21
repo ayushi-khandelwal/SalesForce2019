@@ -1,0 +1,117 @@
+<apex:page id="thePage" controller="CartController2">
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:form id="theForm">
+        <apex:pageBlock id="purchaseOrderFormBlock" rendered="{!showPurchaseOrderFormBlock}">
+            <table>
+                <tr>
+                	<td> Purchase Order Name :</td>
+                    <td><apex:inputField value="{!purchaseOrderObject.Name}"/></td>
+                </tr>
+                <tr>
+                	<td> Company :</td>
+                    <td><apex:inputField value="{!purchaseOrderObject.Company__c}" /></td>
+                </tr>
+                <tr>
+                	<td> Order Cost:</td>
+                    <td>{!orderCost}</td>
+                </tr>
+                <tr>
+                	<td></td>
+                    <td><apex:commandButton action="{!placeOrder}" value="Place Order" reRender="theForm"></apex:commandButton></td>
+                </tr>
+            </table>
+        </apex:pageBlock>
+        <apex:pageBlock id="purchaseOrdersBlock" rendered="{!showPurchaseOrdersBlock}">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!createAPurchaseOrder}" value="New Purchase Order" reRender="theForm" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable id="purchaseOrdersTable" value="{!purchaseOrders}" var="purchaseOrder" rowClasses="odd,even" styleClass="tableClass">
+                    <apex:facet name="header">Purchase Orders</apex:facet>
+                    <apex:column >
+                        <apex:facet name="header">Name</apex:facet>
+                        <h2>{!purchaseOrder.Name}</h2>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Order Cost</apex:facet>
+                        {!purchaseOrder.Order_Cost__c}
+                    </apex:column>   
+                    <apex:column >
+                        <apex:facet name="header">Status</apex:facet>
+                        {!purchaseOrder.Status__c}
+                    </apex:column>                          
+                    <apex:column >
+                        <apex:facet name="header">Purchase Order Id</apex:facet>
+                        {!purchaseOrder.Purchase_Order_Id__c}
+                    </apex:column>
+            </apex:pageBlockTable>
+            <apex:commandButton value="First" action="{!setConPurchaseOrders.first}" disabled="{!!setConPurchaseOrders.hasPrevious}" reRender="purchaseOrdersBlock"/>
+        	<apex:commandButton value="Previous" action="{!setConPurchaseOrders.previous}" disabled="{!!setConPurchaseOrders.hasPrevious}" reRender="purchaseOrdersBlock"/>
+        	<apex:commandButton value="Next" action="{!setConPurchaseOrders.next}" disabled="{!!setConPurchaseOrders.hasNext}" reRender="purchaseOrdersBlock"/>
+        	<apex:commandButton value="Last" action="{!setConPurchaseOrders.last}" disabled="{!!setConPurchaseOrders.hasNext}" reRender="purchaseOrdersBlock"/>
+        </apex:pageBlock>
+        <apex:pageBlock id="productsBlock" rendered="{!showProductBlock}">
+            <apex:pageBlockTable value="{!products}" var="product">
+                <apex:facet name="header">Products</apex:facet>
+                    <apex:column >
+                    		<apex:facet name="header">Name</apex:facet>
+                    		{!product.Name}
+                	</apex:column>
+                  	<apex:column >
+                    		<apex:facet name="header">Availibility</apex:facet>
+                    		{!product.Status__c}
+                	</apex:column>
+                  	<apex:column >
+                    		<apex:facet name="header">Price</apex:facet>
+                    		{!product.Price__c}
+                	</apex:column>
+                  	<apex:column >
+                    		<apex:facet name="header">Action</apex:facet>
+                        	<apex:commandLink action="{!addToCart}" value="Add To Order"  reRender="theForm">
+                                    <apex:param name="parameterOfProductId"
+                                        value="{!product.Id}"
+                                        assignTo="{!productId}" />
+                    		</apex:commandLink>
+                    </apex:column>
+            </apex:pageBlockTable>
+            <apex:commandButton value="First" action="{!setConProducts.first}" disabled="{!!setConProducts.hasPrevious}" reRender="productsBlock"/>
+        	<apex:commandButton value="Previous" action="{!setConProducts.previous}" disabled="{!!setConProducts.hasPrevious}" reRender="productsBlock"/>
+        	<apex:commandButton value="Next" action="{!setConProducts.next}" disabled="{!!setConProducts.hasNext}" reRender="productsBlock"/>
+        	<apex:commandButton value="Last" action="{!setConProducts.last}" disabled="{!!setConProducts.hasNext}" reRender="productsBlock"/>
+        </apex:pageBlock>
+        <apex:pageBlock id="cartItemsBlock" mode="inLineMode" rendered="{!showCartItemsBlock}">
+            <apex:pageBlockTable value="{!cartItems}" var="cartItem" rendered="{!cartItems.size>0}">
+                <apex:facet name="header">Cart Items</apex:facet>
+                <apex:column >
+                    <apex:facet name="header">Name</apex:facet>
+                    {!cartItem.Product__r.Name}
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Quantity</apex:facet>
+                    <apex:actionRegion >
+                        <apex:outputField value="{!cartItem.Quantity__c}" >
+                            <apex:inlineEditSupport id="inlineEdit" event="ondblClick"/>
+                        </apex:outputField>
+                    </apex:actionRegion>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Price Of Line Item</apex:facet>
+                    {!cartItem.Quantity__c * cartItem.Product__r.Price__c}
+                </apex:column>
+                <apex:column >
+                    <apex:commandButton action="{!deleteCartItem}" value="Delete" reRender="cartItemsBlock">
+                                    <apex:param name="parameterOfPurchaseLineItemId"
+                                        value="{!cartItem.Product__r.Id}"
+                                        assignTo="{!cartItemId}" />
+                    </apex:commandButton>
+                 </apex:column>
+            </apex:pageBlockTable>
+            <apex:commandButton value="Set Quantities" reRender="cartItemsBlock" rendered="{! cartItems.size>0}"></apex:commandButton>
+            <apex:commandButton id="saveButton" action="{!checkOut}"  value="Check Out" reRender="theForm" rendered="{!cartItems.size>0}" />
+            <apex:pageBlockSection rendered="{!cartItems.size==0}" >
+                Oops! Cart is Empty.
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:commandButton value="Add More Items" action="{!addMoreItemsToCart}" reRender="theForm" rendered="{!showPurchaseOrderFormBlock}"></apex:commandButton>
+        <apex:commandButton value="Cancel Purchase" action="{!cancelPurchase}" reRender="theForm" rendered="{!OR(showPurchaseOrderFormBlock,showProductBlock)}"></apex:commandButton>
+    </apex:form>
+</apex:page>
