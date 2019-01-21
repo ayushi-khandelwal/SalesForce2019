@@ -34,7 +34,7 @@ public class LoansHelper {
                 }
             }
         }
-        EmailTemplate eTemp = [SELECT id,name FROM EmailTemplate WHERE name ='Loan Status Info Email' AND isActive = true LIMIT 1];
+        EmailTemplate eTemp = [SELECT id,name FROM EmailTemplate WHERE name ='Loan Status Info VF' AND isActive = true LIMIT 1];
         List<Messaging.SingleEmailMessage> emailMessages = new List<Messaging.SingleEmailMessage>();
         for(Loan__c emailApplicant : emailApplicants){
             Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
