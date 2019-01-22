@@ -1,0 +1,34 @@
+<apex:page standardController="TestSf1__c">
+    <style>
+        
+        .inputFieldLabel{
+            width: 20%;
+            text-align : right;
+        }
+    </style>
+    <h1> TestSf1 Form Page </h1>
+    <apex:form >
+        <table>
+            <tr>
+                <td class="inputFieldLabel">Name :</td>
+                <td><apex:inputField value="{!TestSf1__c.Name}" /></td>
+            </tr>
+             <tr>
+                <td class="inputFieldLabel">Test Date :</td>
+                <td><apex:inputField value="{!TestSf1__c.Test_Date__c}" /></td>
+            </tr>
+             <tr>
+                <td class="inputFieldLabel">User :</td>
+                <td><apex:inputField value="{!TestSf1__c.User__c}" /></td>
+            </tr>
+             <tr>
+                <td class="inputFieldLabel">Description :</td>
+                <td><apex:inputField value="{!TestSf1__c.Description__c}" /></td>
+            </tr>
+             <tr>
+                <td class="inputFieldLabel"></td>
+                <td><apex:commandButton value="Save" action="{!save}" /></td>
+            </tr>
+        </table>
+    </apex:form>
+</apex:page>
