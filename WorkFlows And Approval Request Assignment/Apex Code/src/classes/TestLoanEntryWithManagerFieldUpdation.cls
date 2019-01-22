@@ -30,7 +30,7 @@ private class TestLoanEntryWithManagerFieldUpdation {
     }
     
      @testSetup
-   	public static void insertData(){
+   	private static void insertData(){
    		User testUser = new User(
 		     ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id,
 		     LastName = 'last',
