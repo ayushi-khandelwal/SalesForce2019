@@ -4,7 +4,7 @@
     <apex:attribute name="pageSizeComponent" type="Integer" assignTo="{!pageSize}" description="PageSize of the Data List that is going to be rendered." default="5" />
    <apex:slds />
    <apex:pageMessages />
-   <apex:pageBlock id="dataTable" rendered="{!showDataTable}">
+   <apex:pageBlock id="dataTable" rendered="{!records.size > 0}">
        <apex:pageblockTable value="{!records}" var="rec">
            <apex:repeat value="{!fieldNames}" var="fld">
                <apex:column >
@@ -28,11 +28,10 @@
        	   <apex:commandButton value="Next" action="{!ssc.next}" disabled="{!!ssc.hasNext}" reRender="dataTable" />
        	   <apex:commandButton value="Last" action="{!ssc.last}" disabled="{!!ssc.hasNext}" reRender="dataTable" />
     </apex:pageBlock>
-    <apex:pageBlock>
-        <!-- Show notice if related list has no records -->
-       <apex:outputPanel layout="block" rendered="{!!showDataTable}" >
+    <apex:pageBlock >
+       <apex:outputPanel layout="block" rendered="{!records.size == 0}" >
            No records to display
        </apex:outputPanel>
-        <apex:commandButton value="Back" action="{!goBack}" disabled="{!showDataTable}"  />
+        <apex:commandButton value="Back" action="{!goBack}" />
     </apex:pageBlock>
 </apex:component>
