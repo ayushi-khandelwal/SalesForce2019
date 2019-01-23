@@ -1,0 +1,14 @@
+<apex:page controller="AccountReportController">
+	<apex:pageBlock id="thePageBlock">
+    	<apex:pageBlockTable value="{!records}" var="rec">
+            <apex:column >
+                <apex:facet name="header">Account Name</apex:facet>
+                {!rec.Name}
+                </apex:column>
+            <apex:column >
+                <apex:facet name="header">Amount</apex:facet>
+                {!rec.Amount}
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>
