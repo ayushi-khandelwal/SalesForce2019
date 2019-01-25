@@ -13,8 +13,8 @@ public class ContactQuery {
 	public EnterpriseConnection connection;
 
 	public static LoginResult login() throws ConnectionException {
-		final String USERNAME = "sankalp.vyas@metacube.com";
-		final String PASSWORD = "plmkoij123";
+		final String USERNAME = "";
+		final String PASSWORD = "";
 		final String URL = "https://login.salesforce.com/services/Soap/c/44.0";
 		final LoginResult loginResult = loginToSalesforce(USERNAME, PASSWORD, URL);
 		return loginResult;
