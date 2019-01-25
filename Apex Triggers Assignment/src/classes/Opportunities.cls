@@ -19,7 +19,8 @@ public with sharing class Opportunities extends fflib_SObjectDomain {
     
     public override void onAfterUpdate(Map<Id,SObject> existingRecords){
     	fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(new Schema.SObjectType[] { OpportunityLineItem.SObjectType });
-    	OpportunityManager.customStatusChangeDeleteProductsAssociated((List<Opportunity>) Records, uow);
+    	OpportunityManager.customStatusChangeDeleteProductsAssociated((List<Opportunity>) Records,existingRecords, uow);
     	uow.commitWork();
+        OpportunityManager.statusChangeEmail((List<Opportunity>) Records,existingRecords);
     }
 }
