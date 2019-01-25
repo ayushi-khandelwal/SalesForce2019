@@ -29,17 +29,18 @@ public with sharing class OpportunityManager {
     	}	
     }
     
-    public static void customStatusChangeDeleteProductsAssociated(List<Opportunity> recordsUpdated,fflib_SObjectUnitOfWork uow){
-    	Set<Id> opportunityIds = new Set<Id>();
-    	for(Opportunity opportunityObject : recordsUpdated){
-    		if(opportunityObject.Custom_Status__c == 'Reset'){
-    			opportunityIds.add(opportunityObject.Id);
-    		}
-    	}
-    	if(opportunityIds.size()>0){
-    		OpportunityLineItemsSelector oppLineItemSelector = new OpportunityLineItemsSelector();
-    		List<OpportunityLineItem> oppLineItemList = oppLineItemSelector.selectOpportunityLineItemByOpportunityId(opportunityIds);
-    		uow.registerDeleted(oppLineItemList);
-    	}
+  public static void customStatusChangeDeleteProductsAssociated(List<Opportunity> recordsUpdated,Map<Id,SObject> existingRecords,fflib_SObjectUnitOfWork uow){
+        Set<Id> opportunityIds = new Set<Id>();
+        for(Opportunity opportunityObject : recordsUpdated){
+            Opportunity oppObjectToCompare = (Opportunity)existingRecords.get(opportunityObject.ID);
+            if(opportunityObject.Custom_Status__c == 'Reset' && oppObjectToCompare!=null && oppObjectToCompare.Custom_Status__c != 'Reset'){
+                opportunityIds.add(opportunityObject.Id);
+            }
+        }
+        if(opportunityIds.size()>0){
+            OpportunityLineItemsSelector oppLineItemSelector = new OpportunityLineItemsSelector();
+            List<OpportunityLineItem> oppLineItemList = oppLineItemSelector.selectOpportunityLineItemByOpportunityId(opportunityIds);
+            uow.registerDeleted(oppLineItemList);
+        }
     }
 }
